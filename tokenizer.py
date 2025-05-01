@@ -62,3 +62,22 @@ class KazakhLMTokenizer:
             self.tokens = self.merge_token_pair(self.tokens, top_pair, new_idx)
 
             self.vocab[new_idx] = self.vocab[top_pair[0]] + self.vocab[top_pair[1]]
+            
+    def encode(self, text):
+        tokens = list(text.encode('utf-8'))
+        while len(tokens) >= 2:
+            stats = self.get_pair_counts(tokens)
+            pair = min(stats, key=lambda p: self.merges.get(p, float("inf")))
+            if pair not in self.merges:
+                break 
+            idx = self.merges[pair]
+            tokens = self.merge_token_pair(tokens, pair, idx)
+        return tokens
+            
+            
+    def decode(self, ids):
+        tokens = "".join(self.vocab[idx] for idx in ids)
+        text = tokens.decode('utf-8', errors='replace')
+        return text 
+    
+    
