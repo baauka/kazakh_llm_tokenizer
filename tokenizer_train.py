@@ -11,3 +11,8 @@ for key, val in vocab.items():
     print(key, val.decode('utf-8', errors='replace'))
     
 print(f"Now your vocab length = {len(vocab)}")
+
+text = "Сәлем досым, қалайсың?"
+
+print(f'Original text: {text}')
+print(f'Encoded text: {kz_tokenizer.encode(text)}')
