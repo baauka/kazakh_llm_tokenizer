@@ -20,17 +20,20 @@ class KazakhLMTokenizer:
 
     def load_corpus(self, corpus_txt):
         """Load and read the text corpus."""
+        
         with open(corpus_txt, 'r', encoding='utf-8') as file:
             return file.read()
 
     def filter_tokens(self, text):
         """Filter tokens based on regex to exclude unwanted characters."""
+        
         pattern = r'^(?!.*[?!\d]).*$'
         filtered_tokens = [token for token in text if re.match(pattern, token)]
         return "".join(filtered_tokens).encode('utf-8')
 
     def get_pair_counts(self, ids):
         """Count token pairs."""
+        
         counts = {}
         for pair in zip(ids, ids[1:]):
             counts[pair] = counts.get(pair, 0) + 1
@@ -38,6 +41,7 @@ class KazakhLMTokenizer:
 
     def merge_token_pair(self, ids, pair, idx):
         """Merge the most frequent token pair into a new token."""
+        
         newids = []
         i = 0
         while i < len(ids):
@@ -51,6 +55,7 @@ class KazakhLMTokenizer:
     
     def train_tokenizer(self):
         """Train the tokenizer by merging frequent token pairs."""
+        
         print("Training process has started...")
 
         for i in range(self.num_merges):
@@ -64,6 +69,8 @@ class KazakhLMTokenizer:
             self.vocab[new_idx] = self.vocab[top_pair[0]] + self.vocab[top_pair[1]]
             
     def encode(self, text):
+        """Encodes the input text into a sequence of tokens by applying Byte Pair Encoding (BPE)."""
+        
         tokens = list(text.encode('utf-8'))
         while len(tokens) >= 2:
             stats = self.get_pair_counts(tokens)
@@ -76,6 +83,8 @@ class KazakhLMTokenizer:
             
             
     def decode(self, ids):
+        """Decodes a sequence of token IDs back into the original text."""
+        
         tokens = "".join(self.vocab[idx] for idx in ids)
         text = tokens.decode('utf-8', errors='replace')
         return text 
