@@ -1,5 +1,5 @@
 import re
-
+import pickle
 class KazakhLMTokenizer:
     
     def __init__(self, corpus_txt, desired_vocab_size):
@@ -89,4 +89,17 @@ class KazakhLMTokenizer:
         text = tokens.decode('utf-8', errors='replace')
         return text 
     
+    def save_merges(self, filename):
+        """Save the merges dictionary to a separate pickle file."""
+        
+        with open(filename, 'wb') as f:
+            pickle.dump(self.merges, f)
+        print(f"Merges saved to {filename}")
+    
+    def save_vocab(self, filename):
+        """Save the vocab dictionary to a separate pickle file."""
+        
+        with open(filename, 'wb') as f:
+            pickle.dump(self.vocab, f)
+        print(f"Vocabulary saved to {filename}")
     
